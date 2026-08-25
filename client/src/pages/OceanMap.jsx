@@ -142,15 +142,15 @@ const createPortIcon = (congestion) => {
   const color = CONGESTION_COLOR[congestion] || '#60a5fa';
   return L.divIcon({
     html: `<div style="
-        width:10px;height:10px;
+        width:14px;height:14px;
         background:${color};
-        border:2px solid rgba(255,255,255,0.8);
+        border:2px solid #fff;
         border-radius:50%;
-        box-shadow:0 0 8px ${color};
+        box-shadow:0 0 0 3px rgba(5,10,18,0.75), 0 0 12px ${color};
       "></div>`,
-    iconSize: [10, 10],
-    iconAnchor: [5, 5],
-    popupAnchor: [0, -9],
+    iconSize: [14, 14],
+    iconAnchor: [7, 7],
+    popupAnchor: [0, -12],
     className: '',
   });
 };
@@ -576,6 +576,7 @@ export default function OceanMap() {
             <MapContainer
               center={[18, 40]}
               zoom={3}
+              className="ocean-map"
               style={{ height: '100%', width: '100%' }}
               zoomControl={true}
               attributionControl={false}
@@ -630,34 +631,40 @@ export default function OceanMap() {
                 const hasSel = !!selectedRoute;
                 const isFeatured = route.id === 'R8';
                 return (
-                  <Polyline
-                    key={route.id}
-                    positions={wps}
-                    pathOptions={{
-                      className: 'animated-route-line',
-                      color: isSel ? '#fff' : route.color,
-                      weight: isSel ? 5 : isFeatured ? 3.5 : 2.5,
-                      opacity: isSel ? 1 : hasSel ? 0.2 : isFeatured ? 0.9 : 0.65,
-                      dashArray: isSel ? null : isFeatured ? null : '12, 12',
-                    }}
-                    eventHandlers={{
-                      click: (e) => {
-                        e.originalEvent?.stopPropagation?.();
-                        setSelectedVessel(null);
-                        setSelectedPort(null);
-                        setSelectedRoute(isSel ? null : route);
-                      },
-                    }}
-                  >
-                    <Popup>
-                      <div style={{ fontFamily: 'monospace', fontSize: '12px' }}>
-                        <b>{route.name}</b><br />
-                        {route.corridor}<br />
-                        Distance: {route.distanceNm?.toLocaleString()} nm<br />
-                        ETA: ~{route.etaDays} days
-                      </div>
-                    </Popup>
-                  </Polyline>
+                  <React.Fragment key={route.id}>
+                    <Polyline
+                      positions={wps}
+                      pathOptions={{ color: '#06111f', weight: isSel ? 11 : 8, opacity: hasSel && !isSel ? 0.18 : 0.9 }}
+                      interactive={false}
+                    />
+                    <Polyline
+                      positions={wps}
+                      pathOptions={{
+                        className: 'animated-route-line',
+                        color: isSel ? '#fff' : route.color,
+                        weight: isSel ? 5 : isFeatured ? 4 : 3,
+                        opacity: isSel ? 1 : hasSel ? 0.2 : isFeatured ? 0.9 : 0.65,
+                        dashArray: isSel ? null : isFeatured ? null : '12, 12',
+                      }}
+                      eventHandlers={{
+                        click: (e) => {
+                          e.originalEvent?.stopPropagation?.();
+                          setSelectedVessel(null);
+                          setSelectedPort(null);
+                          setSelectedRoute(isSel ? null : route);
+                        },
+                      }}
+                    >
+                      <Popup>
+                        <div style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+                          <b>{route.name}</b><br />
+                          {route.corridor}<br />
+                          Distance: {route.distanceNm?.toLocaleString()} nm<br />
+                          ETA: ~{route.etaDays} days
+                        </div>
+                      </Popup>
+                    </Polyline>
+                  </React.Fragment>
                 );
               })}
 

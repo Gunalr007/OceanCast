@@ -139,6 +139,26 @@ h1, h2, h3, h4, h5, h6, .card-title {
   box-shadow: 0 0 8px currentColor;
 }
 
+.ocean-map .leaflet-tile-pane {
+  filter: saturate(0.82) contrast(1.12) brightness(0.82);
+}
+
+.ocean-map .leaflet-control-zoom {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.ocean-map .leaflet-control-zoom a {
+  background: rgba(8, 14, 24, 0.92);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ocean-map .leaflet-control-zoom a:hover {
+  background: #0ea5e9;
+  color: #fff;
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
