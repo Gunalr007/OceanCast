@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { Settings2 } from 'lucide-react';
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────────
 
@@ -201,6 +202,7 @@ export default function OceanMap() {
 
   const [activeSize, setActiveSize] = useState('Small');
   const [showFilters, setShowFilters] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
   const [filterCargo, setFilterCargo] = useState(new Set(CARGO_TYPES));
@@ -511,31 +513,51 @@ export default function OceanMap() {
           )}
 
           {/* ── Legend ─────────────────────────────────────────────────── */}
-          <div style={{
-            position: 'absolute', bottom: '2.8rem', right: '1rem', zIndex: 1000,
-            background: 'rgba(8,14,24,0.92)', padding: '0.75rem 1rem',
-            borderRadius: '8px', border: '1px solid var(--border-light)',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
-          }}>
-            <div style={{ fontWeight: 700, color: '#e2e8f0', marginBottom: '0.5rem', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Legend
-            </div>
-            {[
-              { color: '#fff', label: 'Chennai → Rotterdam (Suez Canal)', dash: false },
-              { color: '#10b981', label: 'Active shipping route', dash: true },
-              { color: '#60a5fa', label: 'Vessel (animated)', dash: false },
-              { color: '#ef4444', label: 'High congestion port', dot: true },
-              { color: '#f59e0b', label: 'Medium congestion port', dot: true },
-              { color: '#10b981', label: 'Low congestion port', dot: true },
-            ].map(({ color, label, dash, dot }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', fontSize: '0.72rem', color: '#94a3b8' }}>
-                {dot
-                  ? <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color, border: '1px solid rgba(255,255,255,0.5)', flexShrink: 0 }} />
-                  : <div style={{ width: '22px', height: '2.5px', background: dash ? 'transparent' : color, borderTop: dash ? `2px dashed ${color}` : 'none', flexShrink: 0 }} />
-                }
-                {label}
+          <div style={{ position: 'absolute', bottom: '2.8rem', right: '1rem', zIndex: 1000 }}>
+            <button
+              type="button"
+              onClick={() => setShowLegend(l => !l)}
+              aria-label="Map legend settings"
+              aria-expanded={showLegend}
+              title="Map legend"
+              style={{
+                width: '38px', height: '38px', display: 'grid', placeItems: 'center',
+                background: showLegend ? 'var(--primary)' : 'rgba(8,14,24,0.92)',
+                border: '1px solid var(--border-light)', borderRadius: '7px',
+                color: '#fff', cursor: 'pointer', fontSize: '1.1rem',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+              }}
+            >
+              <Settings2 size={17} strokeWidth={2} />
+            </button>
+            {showLegend && (
+              <div style={{
+                position: 'absolute', bottom: 'calc(100% + 0.5rem)', right: 0,
+                background: 'rgba(8,14,24,0.96)', padding: '0.75rem 1rem',
+                borderRadius: '8px', border: '1px solid var(--border-light)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.6)', width: '220px',
+              }}>
+                <div style={{ fontWeight: 700, color: '#e2e8f0', marginBottom: '0.5rem', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Legend
+                </div>
+                {[
+                  { color: '#fff', label: 'Chennai → Rotterdam (Suez Canal)', dash: false },
+                  { color: '#10b981', label: 'Active shipping route', dash: true },
+                  { color: '#60a5fa', label: 'Vessel (animated)', dash: false },
+                  { color: '#ef4444', label: 'High congestion port', dot: true },
+                  { color: '#f59e0b', label: 'Medium congestion port', dot: true },
+                  { color: '#10b981', label: 'Low congestion port', dot: true },
+                ].map(({ color, label, dash, dot }) => (
+                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem', fontSize: '0.72rem', color: '#94a3b8' }}>
+                    {dot
+                      ? <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color, border: '1px solid rgba(255,255,255,0.5)', flexShrink: 0 }} />
+                      : <div style={{ width: '22px', height: '2.5px', background: dash ? 'transparent' : color, borderTop: dash ? `2px dashed ${color}` : 'none', flexShrink: 0 }} />
+                    }
+                    {label}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
 
           {/* ── Status Bar ─────────────────────────────────────────────── */}
